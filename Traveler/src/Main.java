@@ -47,7 +47,7 @@ public class Main {
 			}
 		}
 
-		get_tab_n_m(dist);
+//		get_tab_n_m(dist);
 /*		
 		Population pop = new Population(ville,dist,10,10);
 		
@@ -62,17 +62,18 @@ public class Main {
 			System.out.println();
 		}
 */
-		Itineraire iti = new Itineraire(ville,dist, 6, 15);
+		Itineraire iti = new Itineraire(ville ,dist, 6, 15);
 		iti.get();
 		Itineraire trier = iti.pivot();
 		
 		trier.get();
-		
+		trier.reproduction(dist);
+		trier.get();
+		trier.get_pivot();
 		
 	}
 
 	private static void get_tab_n_m(int dist[][]) {
-		// TODO Auto-generated method stub
 		/*
 		 *impression du tableau 
 		 */

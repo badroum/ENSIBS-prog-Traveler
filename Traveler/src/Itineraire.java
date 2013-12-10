@@ -4,39 +4,50 @@ import java.util.Random;
 public class Itineraire {
 	int[][] population;
 	int[] distance_total;
+	int pivot;
 	static private Random random = new Random(System.currentTimeMillis());
+	
 	public Itineraire(int nbr_ville , int nbr_iti)
 	{
 		init(nbr_ville,nbr_iti);
+		pivot =random.nextInt(nbr_iti);
 	}
-	public Itineraire(int[][] itineraires ,int[] distance, int place)
+	
+	public Itineraire(int[][] itineraires ,int[] distance, int n_pivot)
 	{
-		population[0] = itineraires[place];
-		distance_total[0] = distance[place];
+		population = new int [1][itineraires[0].length];
+		distance_total = new int [1];
+		
+		pivot =random.nextInt(n_pivot+1);
+		
+		
+		population[0] = itineraires[pivot];
+		distance_total[0] = distance[pivot];
 	}
-	public Itineraire(String ville[], int dist[][] ,int nbr_ville , int nbr_iti)//m=>nombre de ville prise en compte; n=> nombre de combinaison prise
+	
+	public Itineraire(String[] ville, int[][] dist ,int nbr_ville , int nbr_iti)//m=>nombre de ville prise en compte; n=> nombre de combinaison prise
 	{
 		
 		//initialisation du tableau avec des -1
 		init(nbr_ville,nbr_iti);
 		
 		
-		int rand =random.nextInt(nbr_ville);
+		pivot = random.nextInt(nbr_iti);
 		
 		for (int i=0 ; i<nbr_iti ; i++)
 		{
 			int j = 0;
 			do
 			{
-				if (rand == population[i][j])
+				if (pivot == population[i][j])
 					{
-						rand =random.nextInt(nbr_ville);
+					pivot =random.nextInt(nbr_iti);
 						j=0;
 					}
 				else if (population[i][j] == -1)
 					{
-						population[i][j]=rand;
-						rand =random.nextInt(nbr_ville);
+						population[i][j]=pivot;
+						pivot =random.nextInt(nbr_iti);
 						j=0;
 					}
 				else if (population[i][nbr_ville-1]!= -1) break;
@@ -81,22 +92,28 @@ public class Itineraire {
 		}
 		System.out.println("/==============================/");
 	}
+	public void get_pivot()
+	{
+		System.out.println("indice de pivot" + "\t" + pivot);
+	}
+	
 	public Itineraire pivot() {
 		Itineraire trier=new Itineraire( population[0].length, population.length);
-		int rand =random.nextInt(population[0].length);
-		trier.population[0]=population[rand];
-		trier.distance_total[0]=distance_total[rand];
+		//pivot =random.nextInt(population[0].length);
+		trier.population[0]=population[pivot];
+		trier.distance_total[0]=distance_total[pivot];
+		trier.pivot=pivot;
 		for (int i = 0; i < (distance_total.length); i++) {
 		
-			if(i<rand)
+			if(i<pivot)
 			{
-				if ((distance_total[rand]<=distance_total[i])&&(i!=rand))
+				if ((distance_total[pivot]<=distance_total[i])&&(i!=pivot))
 				{
 					trier.population[i+1]=population[i];
 					trier.distance_total[i+1]=distance_total[i];
 				}
 				
-				else if(distance_total[rand]>distance_total[i]&&(i!=rand))
+				else if(distance_total[pivot]>distance_total[i]&&(i!=pivot))
 				{
 					for (int j = (i+1); j > 0; j--) {
 						trier.population[j]=trier.population[j-1];
@@ -108,13 +125,13 @@ public class Itineraire {
 			}
 			else
 			{
-				if ((distance_total[rand]<=distance_total[i])&&(i!=rand))
+				if ((distance_total[pivot]<=distance_total[i])&&(i!=pivot))
 				{
 					trier.population[i]=population[i];
 					trier.distance_total[i]=distance_total[i];
 				}
 				
-				else if(distance_total[rand]>distance_total[i]&&(i!=rand))
+				else if(distance_total[pivot]>distance_total[i]&&(i!=pivot))
 				{
 					for (int j = (i); j > 0; j--) {
 						trier.population[j]=trier.population[j-1];
@@ -126,34 +143,86 @@ public class Itineraire {
 			}
 			
 		}
-		
 		return trier;
 	}
 	
-	public Itineraire reproduction()
+	public void reproduction(int dist[][])
 	{
-		Itineraire pere = new Itineraire( population,distance_total,0);
-		Itineraire mere = new Itineraire( population,distance_total,0);
-		/*
-		 * deux boucle l'une pour suprimer les itinéraire déjà présent dans pere avant le pivot
-		 *	l'autre pour agréger le père et la mère
-		 */
-		int rand =random.nextInt(population[0].length);
-//		boolean test = false;
-		for (int i = 0; i < rand; i++) 
+		for (int k = pivot; k < population.length; k++) 
 		{
-			for (int j = 0; j < population.length; j++) {
-//				if (pere.population[i]==mere.population[j])
-				{
-					//mere.population[j]=
+			Itineraire pere = new Itineraire( population,distance_total, pivot);
+			//pere.get();
+			Itineraire mere = new Itineraire( population,distance_total, pivot);
+			//mere.get();
+			Itineraire fils =new Itineraire( population[0].length, 1);
+		
+			int rand =random.nextInt(population[0].length);
+	//		boolean test = false;
+
+			
+			
+			for (int i = 0; i < rand; i++) 
+			{
+				fils.population[0][i]=pere.population[0][i];
+				fils.distance_total[0]=pere.distance_total[0];
+			}
+			
+			for (int i = rand; i < population[0].length; i++) 
+			{
+				fils.population[0][i]=-1;
+				fils.distance_total[0]=-1;
+			}
+			
+			for (int i = rand; i < population[0].length; i++) {
+				for (int j = 0; j < population[0].length; j++) {
+					if (verif(fils.population[0], mere.population[0][j], i) && fils.population[0][i]==-1)
+					{
+						fils.population[0][i] =  mere.population[0][j];
+					}
+						
 				}
 				
+			}
+			fils.calcul_distance_total(dist);
+			fils.pivot=rand;
+			population[k]=fils.population[0];
+			distance_total[k]=fils.distance_total[0];
+			
+			if(k==pivot)
+			{
+				System.out.println("Exemple de reproduction:");
+				System.out.println("\tpère:");
+				pere.get();
+				System.out.println("\tmère:");
+				mere.get();
+				System.out.println("\tfils:");
+				fils.get();
+				System.out.println("pivot: " + rand);
 			}
 			
 		}
 		
 		
-		return null;
+		
+		
+//		return void;
+	}
+
+	
+	private boolean verif(int [] fils, int mere, int place )
+	{
+		/*
+		 * Boucle de vérifiation de présence d'une ville
+		 * un tableau d'itinéraire ; une ville a vérifier ; la place jusqu'ou verifier
+		 */
+		boolean test= true;
+	
+		for (int i = 0; i < place; i++) {
+			if(fils[i]==mere) test=false;	
+		}
+		
+		return test;
+		
 	}
 }  
 
