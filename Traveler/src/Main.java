@@ -1,43 +1,118 @@
-public class Main {
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-	public static void main(String [] args)
+import javax.swing.JOptionPane;
+
+public class Main {
+	
+	/*
+	 * initialisation des variables globale d'environement
+	 */
+	
+	public static String ville[]	= new String[init_nbr_ville("villes.dat")];
+	public static int position[][]	= new int[init_nbr_ville("villes.dat")][2];//[colonne][ligne]
+	public static int dist[][]		= new int[init_nbr_ville("villes.dat")][init_nbr_ville("villes.dat")];
+	
+	public static void main(String [] args) throws FileNotFoundException, IOException
 	{	
-		//System.out.println("Hello world");
-		LineFileReader test = new LineFileReader("villes.dat");// création d'un objet LineFileReader
+	
+		init();
 		
-		/*
-		 * initialisation des variables d'environement
-		 */
-		int count = init_nbr_ville(test);
-		String tab[] = new String[2];
-		String ville[]	= new String[count];
-		int position [][]= new int[count][2];//[colonne][ligne]
-		int dist [] []	= new int[count][count];
-		int i=0;
-//*
-// *	tableau en entier
-// *
-		test.open(); //ouverture de l'objet
-		String temps;
-		do
-		{
-			temps = test.readLine(); //on place la ligne courante dans temps
-			//System.out.println(temps);
-			
-			if(temps != null)
-			{
-				tab=temps.split(" ");
-				//System.out.println(tab[0] +" "+ tab[1] +" "+ tab[2] +" "+ i);
-				ville[i]=tab[2];
-				position[i][0]= Integer.parseInt(tab[0]);
-				position[i][1]=	Integer.parseInt(tab[1]);
-				i++;
+		getville();
+		//get_tab_n_m(dist);
+		
+		System.out.println(init_nbr_ville("villes.dat"));
+		
+		String[] tmp= new String[ville.length];
+		
+		for (int i = 0; i < ville.length; i++) {
+			tmp[i]=Integer.toString(i+1);
+		}
+
+		 int nbr_ville = Integer.parseInt((String)JOptionPane.showInputDialog(null, 
+			      "Valeur par default 10",
+			      "Veuillez indiquer le nombre de ville !",
+			      JOptionPane.QUESTION_MESSAGE, null, tmp, tmp[9]))-1;
+		
+		 //demande le nombre d'itinéraire voulus
+		 for (int i = 0; i < ville.length; i++) {
+			 if(i<10) tmp[i]=Integer.toString(i*10);
+			 else if(i>17)tmp[i] = "0";
+			 else tmp[i]=Integer.toString((int)Math.pow(10,(i-8)));		 
 			}
-			
-		}while(temps != null);
-		test.close();
+		 int nbr_iti=0;
+			do
+			{
+			 	nbr_iti = Integer.parseInt((String)JOptionPane.showInputDialog(null, 
+					      "Nombre d'itinéraire a prendre en compte",
+					      "Plus y en à plus c'est long, pas forcéméne bon !",
+					      JOptionPane.QUESTION_MESSAGE, null, tmp, tmp[5]));
+			}while(nbr_iti==0);
+			 
+		//demande le nombre de génération voulus
+			String[] tmp2= new String[8];
+		for (int i = 0; i < 8; i++) {
+			 tmp2[i]=Integer.toString((int)Math.pow(10,i));
+			}
+		 int nbr_gen=1;
+		 nbr_gen = Integer.parseInt((String)JOptionPane.showInputDialog(null, 
+		      "Nombre de génération à prendre en compte",
+		      "Plus y en a plus c'est long, pas forcéménent bon !",
+		      JOptionPane.QUESTION_MESSAGE, null, tmp2, tmp2[1]));
+
 		
-		for(i=0;i<ville.length;i++)
+		Itineraire iti = new Itineraire(nbr_ville, nbr_iti);
+		//iti.get();
+		Itineraire trier = null;
+		for (int i = 0; i < nbr_gen; i++) {
+			trier = iti.pivot();
+			//trier.get();
+			trier.reproduction();
+			//trier.get();
+			//trier.get_pivot();
+		}
+		
+		trier.get();
+		trier.get_best();
+		
+		//trier.aff(trier.get_best());
+		new ImageJPanel(trier.get_best());
+	}
+
+	private static void init() {
+		// TODO Auto-generated method stub
+		String tab[] = new String[2];	
+		int i=0;
+		LineFileReader test = new LineFileReader("villes.dat");
+		//*
+		// *	tableau en entier
+		// *
+				test.open(); //ouverture de l'objet
+				String temps;
+				do
+				{
+					temps = test.readLine(); //on place la ligne courante dans temps
+					
+					if(temps != null)//on fait une verification que la variable n'est pas null
+					{
+						tab=temps.split(" ");//on récupère chaque variable délimité par un espace
+						ville[i]=tab[2];	//on attribu les valeur récuperé dans les tableaux correspondants
+						position[i][0]= Integer.parseInt(tab[0]);
+						position[i][1]=	Integer.parseInt(tab[1]);
+						i++;
+					}
+					
+				}while(temps != null);//on continue la boucle tant que l'on est pas à la fin du document
+				test.close();//on ferme le document( libère de l'espace et permet de le réutilisé après si besoin)
+				
+	}
+/*
+ * crer le tableau des distance a partide sdes coordoner des villes
+ */
+	private static void getville() {
+		
+		// TODO Auto-generated method stub
+		for(int i=0;i<ville.length;i++)
 		{
 			for(int j=0;j<ville.length;j++)
 			{
@@ -46,42 +121,18 @@ public class Main {
 				dist[i][j]= (int) Math.sqrt((A*A)+(B*B));
 			}
 		}
-
-//		get_tab_n_m(dist);
-/*		
-		Population pop = new Population(ville,dist,10,10);
-		
-		for(i=0;i<pop.population.length;i++)
-		{
-			//System.out.print(pop[i] + "\t");
-			
-			for(int j=0;j<pop.population[0].length;j++)
-			{
-				System.out.print(pop.population[i][j] + "\t");
-			}
-			System.out.println();
-		}
-*/
-		Itineraire iti = new Itineraire(ville ,dist, 6, 15);
-		iti.get();
-		Itineraire trier = iti.pivot();
-		
-		trier.get();
-		trier.reproduction(dist);
-		trier.get();
-		trier.get_pivot();
-		
 	}
 
-	private static void get_tab_n_m(int dist[][]) {
+	@SuppressWarnings("unused")
+	private static void get_tab_n_m(int tab[][]) {
 		/*
 		 *impression du tableau 
 		 */
-				for(int i=0;i<dist.length;i++)
+				for(int i=0;i<tab.length;i++)
 				{
-					for(int j=0;j<dist[0].length;j++)
+					for(int j=0;j<tab[0].length;j++)
 					{
-						System.out.print(dist[i][j] + "\t");
+						System.out.print(tab[i][j] + "\t");
 					}
 					System.out.println();
 				}
@@ -89,24 +140,29 @@ public class Main {
 		*/
 	}
 
-	public static int init_nbr_ville(LineFileReader fichier)
+	/*
+	 * parcour le fichier pour savoir combien de ville il contient
+	 */
+	public static int init_nbr_ville(String fichier)
 	{
+		LineFileReader test = new LineFileReader("villes.dat");
+		// création d'un objet LineFileReader
+		
 		int count=0;
 		
 		/*
 		 * Boucle de parcour du fichier pour savoir combien de ligne,
 		 * donc de ville il est composé
 		 */
-		fichier.open(); //ouverture de l'objet
+		test.open(); //ouverture de l'objet
 		String temps = "";
 		do
-		{
-		
-			temps = fichier.readLine();
+		{		
+			temps = test.readLine();
 			if (temps != null) 	count++;
 			
 		}while(temps != null);
-		fichier.close();
+		test.close();
 		
 		return count;
 	}
