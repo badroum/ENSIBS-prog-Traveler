@@ -13,7 +13,7 @@ public class Itineraire {
 	 * constructeur
 	 * @param nbr_ville
 	 */
-	public Itineraire(int nbr_ville)//surcharge pouyr la création d'un itinéraire seul
+	public Itineraire(int nbr_ville)//Surcharge pour la création d'un itinéraire seul
 	{
 		init(nbr_ville,1);
 		pivot =random.nextInt(nbr_ville);
@@ -40,7 +40,7 @@ public class Itineraire {
 	 * @param nbr_ville
 	 * @param nbr_iti
 	 */
-	public Itineraire(int nbr_ville , int nbr_iti)//m=>nombre de ville prise en compte; n=> nombre de combinaison prise
+	public Itineraire(int nbr_ville , int nbr_iti)
 	{
 		
 		//initialisation du tableau avec des -1
@@ -72,7 +72,7 @@ public class Itineraire {
 	}
 
 	/**
-	 * initialisation du tableau avec des -1
+	 * Initialisation du tableau avec des -1
 	 * @param ville
 	 * @param iti
 	 */
@@ -98,7 +98,7 @@ public class Itineraire {
 		
 	}
 	/**
-	 * affiche les itinéraire contrnu dans la population
+	 * Affiche les itinéraires contenus dans la population
 	 */
 	public void get()
 	{
@@ -115,8 +115,8 @@ public class Itineraire {
 	}
 	
 	/**
-	 * affiche le meilleur itineraire
-	 * @return
+	 * Affiche le meilleur itinéraire
+	 * @return Le meilleur itinéraire de la population
 	 */
 	public Itineraire get_best() {
 		// TODO Auto-generated method stub
@@ -135,7 +135,7 @@ public class Itineraire {
 	}
 	
 	/**
-	 * affiche le numéro du pivot
+	 * Affiche le numéro du pivot
 	 */
 	public void get_pivot()
 	{
@@ -154,7 +154,7 @@ public class Itineraire {
 		trier.pivot=pivot;
 		for (int i = 0; i < (distance_total.length); i++) {
 		
-			if(i<pivot)//tand que l'on a pas dépassé le pivot on trie la population
+			if(i<pivot)//Tant que l’on n’a pas dépassé le pivot on trie la population
 			{
 				if ((distance_total[pivot]<=distance_total[i])&&(i!=pivot))//si plus grand on le met après
 				{
@@ -162,7 +162,7 @@ public class Itineraire {
 					trier.distance_total[i+1]=distance_total[i];
 				}
 				
-				else if(distance_total[pivot]>distance_total[i]&&(i!=pivot))//si plus petit on le met après en décalant tout
+				else if(distance_total[pivot]>distance_total[i]&&(i!=pivot))//si plus petit on le met après en décalant tous
 				{
 					for (int j = (i+1); j > 0; j--) {
 						trier.population[j]=trier.population[j-1];
@@ -172,7 +172,7 @@ public class Itineraire {
 					trier.distance_total[0]=distance_total[i];
 				}
 			}
-			else//si on dépasse le pivot on continue a trier la population de la même façon
+			else//Si l’on dépasse le pivot on continue à trier la population de la même façon
 			{
 				if ((distance_total[pivot]<=distance_total[i])&&(i!=pivot))
 				{
@@ -202,7 +202,7 @@ public class Itineraire {
 	{
 		for (int k = pivot; k < population.length; k++) 
 		{
-			//choix du père, mère et déclaration du fils.
+			//Choix du père, mère et déclaration du fils.
 			Itineraire pere = new Itineraire( population,distance_total, pivot);
 			//pere.get();
 			Itineraire mere = new Itineraire( population,distance_total, pivot);
@@ -212,14 +212,14 @@ public class Itineraire {
 			//choix d'un pivot
 			int rand =random.nextInt(population[0].length);
 				
-			//on met le contenu du père avant le pivot dans le fils.
+			//On met le contenu du père avant le pivot dans le fils.
 			for (int i = 0; i < rand; i++) 
 			{
 				fils.population[0][i]=pere.population[0][i];
 				fils.distance_total[0]=pere.distance_total[0];
 			}
 			
-			//on met le contenu de la mère si il n'est pas déjà présent
+			//On met le contenu de la mère s’il n'est pas déjà présent
 			for (int i = rand; i < population[0].length; i++) 
 			{
 				fils.population[0][i]=-1;
@@ -236,11 +236,11 @@ public class Itineraire {
 				}
 				
 			}
-			//on calcul la nouvelle distance du fils
+			//On calcul la nouvelle distance du fils
 			fils.calcul_distance_total();
-			//on ui donne son pivot de création
+			//On lui donne son pivot de création
 			fils.pivot=rand;
-			//on écrase les population après le pivot avec le fils
+			//On écrase les populations après le pivot avec le fils
 			population[k]=fils.population[0];
 			distance_total[k]=fils.distance_total[0];
 			
@@ -267,8 +267,8 @@ public class Itineraire {
 	
 	/**
 	 * reproduction de la population
-	 * pour charque itinéraire de la population inverse deux ville
-	 * un échange de deux même ville est une mutation même si rien ne ce passe
+	 * pour chaque itinéraire de la population inverse deux villes
+	 * un échange de deux mêmes villes est une mutation même si rien ne se passe
 	 */
 	public void mutation(){
 	
@@ -288,8 +288,8 @@ public class Itineraire {
 		
 	}
 	/**
-	 * Boucle de vérifiation de présence d'une ville
-	 * un tableau d'itinéraire ; une ville a vérifier ; la place jusqu'ou verifier
+	 * Boucle de vérification de présence d'une ville
+	 * un tableau d'itinéraire ; une ville à vérifier ; la place jusqu'où vérifier
 	 */
 	private boolean verif(int [] fils, int mere, int place )
 	{

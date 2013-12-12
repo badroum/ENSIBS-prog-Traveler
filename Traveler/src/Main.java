@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 public class Main {
 	
 	/*
-	 * initialisation des variables globale d'environement
+	 * Initialisation des variables globales d'environnements
 	 */
 	
 	public static String ville[]	= new String[init_nbr_ville("villes.dat")];
@@ -34,7 +34,7 @@ public class Main {
 			      "Veuillez indiquer le nombre de ville !",
 			      JOptionPane.QUESTION_MESSAGE, null, tmp, tmp[9]))-1;
 		
-		 //demande le nombre d'itinéraire voulus
+		 //Demande le nombre d'itinéraire voulus
 		 for (int i = 0; i < ville.length; i++) {
 			 if(i<10) tmp[i]=Integer.toString(i*10);
 			 else if(i>17)tmp[i] = "0";
@@ -92,23 +92,23 @@ public class Main {
 				String temps;
 				do
 				{
-					temps = test.readLine(); //on place la ligne courante dans temps
+					temps = test.readLine(); //On place la ligne courante dans temps
 					
-					if(temps != null)//on fait une verification que la variable n'est pas null
+					if(temps != null)//On fait une vérification que la variable n'est pas null
 					{
 						tab=temps.split(" ");//on récupère chaque variable délimité par un espace
-						ville[i]=tab[2];	//on attribu les valeur récuperé dans les tableaux correspondants
+						ville[i]=tab[2];	//On attribue les valeurs récupérées dans les tableaux correspondants
 						position[i][0]= Integer.parseInt(tab[0]);
 						position[i][1]=	Integer.parseInt(tab[1]);
 						i++;
 					}
 					
-				}while(temps != null);//on continue la boucle tant que l'on est pas à la fin du document
-				test.close();//on ferme le document( libère de l'espace et permet de le réutilisé après si besoin)
+				}while(temps != null);//On continue la boucle tant que l’on n’est pas à la fin du document
+				test.close();//On ferme le document (libère de l'espace et permet de le réutiliser après si besoin)
 				
 	}
 /*
- * crer le tableau des distance a partide sdes coordoner des villes
+ * Créer le tableau des distance à partir des coordonner des villes
  */
 	private static void getville() {
 		
@@ -142,7 +142,7 @@ public class Main {
 	}
 
 	/*
-	 * parcour le fichier pour savoir combien de ville il contient
+	 * Parcours le fichier pour savoir combien de ville il contient
 	 */
 	public static int init_nbr_ville(String fichier)
 	{
@@ -152,7 +152,7 @@ public class Main {
 		int count=0;
 		
 		/*
-		 * Boucle de parcour du fichier pour savoir combien de ligne,
+		 * Boucle de parcours du fichier pour savoir combien de ligne,
 		 * donc de ville il est composé
 		 */
 		test.open(); //ouverture de l'objet
