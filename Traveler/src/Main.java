@@ -21,7 +21,7 @@ public class Main {
 		getville();
 		//get_tab_n_m(dist);
 		
-		System.out.println(init_nbr_ville("villes.dat"));
+		//System.out.println(init_nbr_ville("villes.dat"));
 		
 		String[] tmp= new String[ville.length];
 		
@@ -69,13 +69,14 @@ public class Main {
 			//trier.get();
 			trier.reproduction();
 			//trier.get();
+			trier.mutation();
+			//trier.get();
 			//trier.get_pivot();
 		}
 		
 		trier.get();
 		trier.get_best();
 		
-		//trier.aff(trier.get_best());
 		new ImageJPanel(trier.get_best());
 	}
 

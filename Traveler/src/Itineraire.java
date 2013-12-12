@@ -264,7 +264,29 @@ public class Itineraire {
 		
 //		return void;
 	}
-
+	
+	/**
+	 * reproduction de la population
+	 * pour charque itinéraire de la population inverse deux ville
+	 * un échange de deux même ville est une mutation même si rien ne ce passe
+	 */
+	public void mutation(){
+	
+		for (int i = 0; i < population.length; i++) {
+			int m = random.nextInt(population[0].length);
+			int n = random.nextInt(population[0].length);
+			Itineraire mutation =new Itineraire( population[0].length);
+			int tmp;
+			mutation.population[0]=population[i];
+			tmp = population[i][m];
+			mutation.population[0][m] = population[i][n];
+			mutation.population[0][n] = tmp;
+			population[i]=mutation.population[0];
+			mutation.calcul_distance_total();
+			distance_total[i]=mutation.distance_total[0];
+		}
+		
+	}
 	/**
 	 * Boucle de vérifiation de présence d'une ville
 	 * un tableau d'itinéraire ; une ville a vérifier ; la place jusqu'ou verifier
